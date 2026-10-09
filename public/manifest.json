@@ -1,0 +1,21 @@
+{
+  "name": "Edu.ai",
+  "short_name": "Edu.ai",
+  "description": "The ultimate AI educational companion for Sri Lankan students.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/eduai/192/192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://picsum.photos/seed/eduai/512/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

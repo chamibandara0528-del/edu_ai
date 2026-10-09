@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edu.ai</title>
+    <meta name="description" content="The ultimate AI educational companion for Sri Lankan students. Edu.ai offers tailored syllabus guidance, interactive tutoring, and study resources for O/L and A/L students in Sinhala and English." />
+    <meta property="og:title" content="Edu.ai" />
+    <meta property="og:description" content="The ultimate AI educational companion for Sri Lankan students. Edu.ai offers tailored syllabus guidance, interactive tutoring, and study resources for O/L and A/L students in Sinhala and English." />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#D97706" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Edu.ai" />
+    <style>
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      .animate-float { animation: float 6s ease-in-out infinite; }
+      
+      @keyframes pulse-soft {
+        0%, 100% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+      }
+      .animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

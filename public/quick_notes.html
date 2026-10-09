@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>නැණසල Quick Notes (සීඝ්‍ර සටහන්)</title>
+    <!-- Tailwind CSS CDN for high fidelity styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Sinhala:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Custom scrollbar for clean design */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Standard custom media queries to guarantee mobile layout stack */
+        @media (max-width: 600px) {
+            .responsive-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .main-card {
+                padding: 16px !important;
+                border-radius: 24px !important;
+            }
+            .header-bar {
+                padding: 12px 16px !important;
+            }
+            .bottom-nav-text {
+                font-size: 8px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24 text-slate-800">
+
+    <!-- Top Menu Bar for Quick Notes -->
+    <header class="header-bar sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-100 text-primary-700 rounded-2xl flex items-center justify-center font-black shadow-inner">
+                📝
+            </div>
+            <div>
+                <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">Quick Notes</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">නැණසල අධ්‍යාපන සහකරු</p>
+            </div>
+        </div>
+
+        <!-- Menu Action Buttons -->
+        <div class="flex items-center gap-2">
+            <button onclick="toggleSavedNotesDrawer()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all flex items-center gap-2">
+                📂 මගේ සටහන් (My Notes)
+                <span id="savedNotesBadge" class="bg-primary-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black">0</span>
+            </button>
+            <button onclick="clearCurrentForm()" class="p-2 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-xl transition-all" title="Clear form">
+                🔄
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-8 flex flex-col gap-6">
+        
+        <!-- Welcome banner -->
+        <div class="bg-gradient-to-r from-primary-50 to-emerald-50/30 border border-primary-100 p-6 rounded-3xl flex items-center gap-4 shadow-sm">
+            <span class="text-3xl animate-bounce">💡</span>
+            <div>
+                <h2 class="text-sm font-black text-primary-800">ක්‍ෂණික සටහන් පොත (Digital Pad)</h2>
+                <p class="text-xs font-semibold text-slate-500 mt-1">ඔබ ඉගෙන ගන්නා අතරතුර වැදගත් කරුණු, සූත්‍ර හෝ මතක තබාගත යුතු දේවල් මෙහි ලියා තබාගන්න.</p>
+            </div>
+        </div>
+
+        <!-- Sleek Dashboard Card -->
+        <div class="main-card bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl shadow-slate-100/50 flex flex-col gap-6 relative overflow-hidden">
+            <!-- Decorative Background Glow -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-100/30 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- 3 Select Dropdowns Responsive Grid -->
+            <div class="responsive-grid grid grid-cols-3 gap-4">
+                
+                <!-- Grade Select -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-wider">ශ්‍රේණිය (Grade)</label>
+                    <div class="relative">
+                        <select id="gradeSelect" class="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 focus:bg-white border-2 border-slate-100 focus:border-primary-500 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-700 outline-none transition-all cursor-pointer">
+                            <option value="Grade 6">Grade 6</option>
+                            <option value="Grade 7">Grade 7</option>
+                            <option value="Grade 8">Grade 8</option>
+                            <option value="Grade 9">Grade 9</option>
+                            <option value="Grade 10">Grade 10</option>
+                            <option value="Grade 11" selected>Grade 11</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                            ▼
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Select with strict optgroup categorizations -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-wider">විෂය (Subject)</label>
+                    <div class="relative">
+                        <select id="subjectSelect" class="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 focus:bg-white border-2 border-slate-100 focus:border-primary-500 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-700 outline-none transition-all cursor-pointer">
+                            <optgroup label="Core Subjects (ප්‍රධාන විෂයන්)">
+                                <option value="Buddhism (බුද්ධ ධර්මය)">Buddhism (බුද්ධ ධර්මය)</option>
+                                <option value="Sinhala (සිංහල)">Sinhala (සිංහල)</option>
+                                <option value="Mathematics (ගණිතය)" selected>Mathematics (ගණිතය)</option>
+                                <option value="Science (විද්‍යාව)">Science (විද්‍යාව)</option>
+                                <option value="History (ඉතිහාසය)">History (ඉතිහාසය)</option>
+                                <option value="English (ඉංග්‍රීසි)">English (ඉංග්‍රීසි)</option>
+                            </optgroup>
+                            <optgroup label="Basket Group 1 (පළමු කාණ්ඩය)">
+                                <option value="Commerce (ව්‍යාපාර හා ගිණුම්කරණය)">Commerce (ව්‍යාපාර හා ගිණුම්කරණය)</option>
+                                <option value="Geography (භූගෝල විද්‍යාව)">Geography (භූගෝල විද්‍යාව)</option>
+                                <option value="Civic Education (පුරවැසි අධ්‍යාපනය)">Civic Education (පුරවැසි අධ්‍යාපනය)</option>
+                            </optgroup>
+                            <optgroup label="Basket Group 2 (දෙවන කාණ්ඩය)">
+                                <option value="Music (සංගීතය)">Music (සංගීතය)</option>
+                                <option value="Dancing (නැටුම්)">Dancing (නැටුම්)</option>
+                                <option value="Art (චිත්‍ර)">Art (චිත්‍ර)</option>
+                            </optgroup>
+                            <optgroup label="Basket Group 3 (තෙවන කාණ්ඩය)">
+                                <option value="Health & Phys. Ed (සෞඛ්‍ය හා ශාරීරික අධ්‍යාපනය)">Health & Phys. Ed (සෞඛ්‍ය හා ශාරීරික අධ්‍යාපනය)</option>
+                                <option value="ICT (තොරතුරු හා සන්නිවේදන තාක්ෂණය)">ICT (තොරතුරු හා සන්නිවේදන තාක්ෂණය)</option>
+                                <option value="Media Studies (සන්නිවේදනය හා මාධ්‍ය අධ්‍යයනය)">Media Studies (සන්නිවේදනය හා මාධ්‍ය අධ්‍යයනය)</option>
+                                <option value="Agriculture (කෘෂිකර්මය)">Agriculture (කෘෂිකර්මය)</option>
+                            </optgroup>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                            ▼
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Term Select -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-black text-slate-400 uppercase tracking-wider">වාරය (Term)</label>
+                    <div class="relative">
+                        <select id="termSelect" class="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 focus:bg-white border-2 border-slate-100 focus:border-primary-500 rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-700 outline-none transition-all cursor-pointer">
+                            <option value="1st Term" selected>1st Term</option>
+                            <option value="2nd Term">2nd Term</option>
+                            <option value="3rd Term">3rd Term</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                            ▼
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Large Digital Notepad Textarea -->
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-black text-slate-400 uppercase tracking-wider">ලියා ගන්න (Write note here)</label>
+                <div class="relative">
+                    <textarea 
+                        id="noteTextarea" 
+                        rows="8" 
+                        class="w-full bg-slate-50 focus:bg-white border-2 border-slate-100 focus:border-primary-500 rounded-2xl p-5 text-sm font-medium leading-relaxed text-slate-700 outline-none transition-all shadow-inner placeholder-slate-400"
+                        placeholder="මෙතැනින් ඔබේ සටහන් ලියන්න... (උදා: වැදගත් සූත්‍ර, ඉතිහාස දින වකවානු, අර්ථ දැක්වීම්)"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Gradient Green Action Button -->
+            <button 
+                id="saveNoteButton"
+                onclick="saveNote()"
+                class="w-full py-4.5 bg-gradient-to-r from-primary-600 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-primary-600/20 active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+                💾 සටහන සුරකින්න (Save Note)
+            </button>
+
+        </div>
+
+    </main>
+
+    <!-- Side Drawer for Saved Notes (Polished UX overlay) -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300" onclick="toggleSavedNotesDrawer()">
+        <div id="drawerContent" class="absolute right-0 top-0 bottom-0 max-w-md w-full bg-white shadow-2xl p-6 flex flex-col gap-6 translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📁</span>
+                    <h3 class="text-lg font-black text-slate-900">සුරැකි සටහන් (Saved Notes)</h3>
+                </div>
+                <button onclick="toggleSavedNotesDrawer()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+            </div>
+
+            <!-- List container -->
+            <div id="savedNotesList" class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div class="text-center py-10 text-slate-400 font-bold text-sm">
+                    කිසිදු සටහනක් නොමැත.<br><span class="text-xs font-semibold text-slate-300">(No saved notes yet.)</span>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 flex gap-2">
+                <button onclick="exportNotesToTxt()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+                    📥 Download Notes (.txt)
+                </button>
+                <button onclick="clearAllNotes()" class="py-3 px-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-xl transition-all">
+                    🗑️ Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Toast Alert System -->
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl z-[100] transition-all duration-300 transform -translate-y-4 opacity-0 pointer-events-none flex items-center gap-2">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">සාර්ථකව සුරැකුණා!</span>
+    </div>
+
+    <!-- Bottom Navigation Bar as requested -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-2 flex justify-around items-center shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+        
+        <!-- Home Item -->
+        <a href="/" class="flex flex-col items-center gap-1 py-1 text-slate-400 hover:text-slate-600 transition-all">
+            <span class="text-xl">🏠</span>
+            <span class="bottom-nav-text text-[10px] font-bold uppercase tracking-wider text-slate-400">Home</span>
+        </a>
+
+        <!-- Edu.AI Item -->
+        <a href="/?view=robot" class="flex flex-col items-center gap-1 py-1 text-slate-400 hover:text-slate-600 transition-all">
+            <span class="text-xl">🤖</span>
+            <span class="bottom-nav-text text-[10px] font-bold uppercase tracking-wider text-slate-400">Edu.AI</span>
+        </a>
+
+        <!-- Notes Item (Active State with green highlight) -->
+        <a href="#" class="flex flex-col items-center gap-1 py-1.5 px-4 bg-primary-50 text-primary-600 rounded-2xl scale-105 shadow-sm transition-all border border-primary-200/40">
+            <span class="text-xl">📝</span>
+            <span class="bottom-nav-text text-[10px] font-black uppercase tracking-widest text-primary-600">Notes</span>
+        </a>
+
+        <!-- Progress Item -->
+        <a href="/?view=profile" class="flex flex-col items-center gap-1 py-1 text-slate-400 hover:text-slate-600 transition-all">
+            <span class="text-xl">📊</span>
+            <span class="bottom-nav-text text-[10px] font-bold uppercase tracking-wider text-slate-400">Progress</span>
+        </a>
+
+    </nav>
+
+    <!-- Simple, Elegant Interactive Logic -->
+    <script>
+        // Localstorage Key
+        const NOTES_STORAGE_KEY = 'np_quick_notes_list';
+
+        // Load saved notes on start
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSavedNotes();
+        });
+
+        // Trigger toast message
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastIcon.innerText = icon;
+            toastMsg.innerText = msg;
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        // Get saved notes
+        function getSavedNotes() {
+            try {
+                return JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Save a new note
+        function saveNote() {
+            const grade = document.getElementById('gradeSelect').value;
+            const subject = document.getElementById('subjectSelect').value;
+            const term = document.getElementById('termSelect').value;
+            const content = document.getElementById('noteTextarea').value.trim();
+
+            if (!content) {
+                showToast('කරුණාකර සටහනක් ලියන්න! (Please write a note!)', '⚠️');
+                return;
+            }
+
+            const notes = getSavedNotes();
+            const newNote = {
+                id: Date.now().toString(),
+                grade,
+                subject,
+                term,
+                content,
+                timestamp: new Date().toLocaleString('si-LK')
+            };
+
+            notes.unshift(newNote);
+            localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+
+            // Visual feedback
+            showToast('සටහන සාර්ථකව සුරැකුණා! (Note saved successfully!)', '✅');
+            document.getElementById('noteTextarea').value = '';
+            
+            // Re-render
+            renderSavedNotes();
+            
+            // Add custom sparky confetti effect using standard elements if required, or celebrate elegantly
+            const btn = document.getElementById('saveNoteButton');
+            btn.classList.add('scale-95');
+            setTimeout(() => btn.classList.remove('scale-95'), 100);
+        }
+
+        // Render notes list
+        function renderSavedNotes() {
+            const notes = getSavedNotes();
+            const list = document.getElementById('savedNotesList');
+            const badge = document.getElementById('savedNotesBadge');
+            
+            badge.innerText = notes.length;
+
+            if (notes.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-10 text-slate-400 font-bold text-sm">
+                        කිසිදු සටහනක් නොමැත.<br><span class="text-xs font-semibold text-slate-300">(No saved notes yet.)</span>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = notes.map(n => `
+                <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl relative group hover:shadow-md transition-all">
+                    <button onclick="deleteNote('${n.id}')" class="absolute top-3 right-3 text-slate-400 hover:text-rose-600 transition-all text-xs">
+                        🗑️
+                    </button>
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                        <span class="px-2 py-0.5 bg-primary-100 text-primary-800 text-[9px] font-black rounded-md">${n.grade}</span>
+                        <span class="px-2 py-0.5 bg-sky-100 text-sky-800 text-[9px] font-black rounded-md max-w-[150px] truncate" title="${n.subject}">${n.subject}</span>
+                        <span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[9px] font-black rounded-md">${n.term}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium whitespace-pre-wrap mt-2 select-text">${escapeHtml(n.content)}</p>
+                    <div class="text-[9px] text-slate-400 font-bold mt-3 border-t border-slate-100/50 pt-2 flex justify-between items-center">
+                        <span>🕒 ${n.timestamp}</span>
+                        <button onclick="loadNoteIntoForm('${n.id}')" class="text-primary-600 hover:underline font-black">Edit 📝</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Delete individual note
+        function deleteNote(id) {
+            let notes = getSavedNotes();
+            notes = notes.filter(n => n.id !== id);
+            localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+            showToast('සටහන මකා දැමුවා! (Note deleted!)', '🗑️');
+            renderSavedNotes();
+        }
+
+        // Load note into active editor form
+        function loadNoteIntoForm(id) {
+            const notes = getSavedNotes();
+            const note = notes.find(n => n.id === id);
+            if (note) {
+                document.getElementById('gradeSelect').value = note.grade;
+                document.getElementById('subjectSelect').value = note.subject;
+                document.getElementById('termSelect').value = note.term;
+                document.getElementById('noteTextarea').value = note.content;
+                toggleSavedNotesDrawer();
+                showToast('සටහන සංස්කරණයට සුදානම්! (Loaded for editing!)', '✍️');
+            }
+        }
+
+        // Toggle saved notes side drawer
+        function toggleSavedNotesDrawer() {
+            const overlay = document.getElementById('drawerOverlay');
+            const content = document.getElementById('drawerContent');
+
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    content.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                overlay.classList.add('opacity-0');
+                content.classList.add('translate-x-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Download notes as text file
+        function exportNotesToTxt() {
+            const notes = getSavedNotes();
+            if (notes.length === 0) {
+                showToast('බාගත කිරීමට සටහන් නොමැත! (No notes to download!)', '⚠️');
+                return;
+            }
+
+            let textContent = "=== නැණසල QUICK NOTES REPORT ===\n\n";
+            notes.forEach((n, idx) => {
+                textContent += `Note #${idx + 1}\n`;
+                textContent += `Grade  : ${n.grade}\n`;
+                textContent += `Subject: ${n.subject}\n`;
+                textContent += `Term   : ${n.term}\n`;
+                textContent += `Time   : ${n.timestamp}\n`;
+                textContent += `----------------------------------------\n`;
+                textContent += `${n.content}\n`;
+                textContent += `========================================\n\n`;
+            });
+
+            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Nanasala_Quick_Notes_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('බාගැනීම සාර්ථකයි! (Downloaded successfully!)', '📥');
+        }
+
+        // Clear entire form
+        function clearCurrentForm() {
+            document.getElementById('noteTextarea').value = '';
+            showToast('ආකෘතිය හිස් කළා! (Form cleared!)', '🔄');
+        }
+
+        // Clear all saved notes
+        function clearAllNotes() {
+            if (confirm('සැබවින්ම සියලුම සටහන් මකා දැමීමට අවශ්‍යද? (Are you sure you want to delete all notes?)')) {
+                localStorage.removeItem(NOTES_STORAGE_KEY);
+                showToast('සියලුම සටහන් මකා දැමුවා! (All notes deleted!)', '🗑️');
+                renderSavedNotes();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "Edu.ai",
+  "description": "The ultimate AI educational companion for Sri Lankan students. Edu.ai offers tailored syllabus guidance, interactive tutoring, and study resources for O/L and A/L students in Sinhala and English.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

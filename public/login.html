@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Teacher - Login & Register</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                            neon: '#10B981', // Neon green accent for educational vibe
+                            glow: '#a855f7'  // Glowing purple accent
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            background: #0b0f19;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism styling */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Glowing background blobs */
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        /* Custom inputs with glowing focus states */
+        .glow-input {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        /* Fade transitions */
+        .fade-transition {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* Responsive stack for very small screens */
+        @media (max-width: 600px) {
+            .responsive-container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            .glass-card {
+                padding: 1.5rem !important;
+                border-radius: 24px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen w-full flex items-center justify-center relative py-12 px-4 responsive-container">
+
+    <!-- Ambient Glowing Background Blobs -->
+    <div class="glow-blob w-[400px] h-[400px] bg-brand-600 top-[-10%] left-[-10%]"></div>
+    <div class="glow-blob w-[500px] h-[500px] bg-indigo-600 bottom-[-15%] right-[-10%]"></div>
+    <div class="glow-blob w-[300px] h-[300px] bg-brand-glow top-[30%] left-[40%]"></div>
+    <div class="glow-blob w-[350px] h-[350px] bg-emerald-600/30 bottom-[20%] left-[10%]"></div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-md z-10">
+        
+        <!-- Logo / App Name -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 shadow-lg shadow-brand-600/30 mb-3 border border-white/10">
+                <span class="text-2xl">🎓</span>
+            </div>
+            <h1 class="text-2xl font-black text-white tracking-tight">නැණසල <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-400 font-extrabold">Virtual Teacher</span></h1>
+            <p class="text-slate-400 text-xs mt-1 font-medium tracking-wide">Your Smart Educational Assistant • ඔබේ සුහුරු අධ්‍යාපන සහකරු</p>
+        </div>
+
+        <!-- Glassmorphic Login/Register Card -->
+        <div class="glass-card w-full rounded-[32px] p-8 shadow-2xl relative overflow-hidden">
+            
+            <!-- Dual Tab Selector -->
+            <div class="flex p-1 bg-slate-950/60 rounded-2xl border border-white/5 mb-8 relative">
+                <div id="activeIndicator" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-gradient-to-r from-brand-600 to-indigo-600 rounded-xl transition-all duration-300 ease-out z-0"></div>
+                
+                <button onclick="switchTab('login')" id="loginTabBtn" class="flex-1 py-2.5 text-xs font-black text-white text-center rounded-xl z-10 transition-all duration-300 relative">
+                    LOGIN (ඇතුල් වන්න)
+                </button>
+                <button onclick="switchTab('register')" id="registerTabBtn" class="flex-1 py-2.5 text-xs font-black text-slate-400 text-center rounded-xl z-10 transition-all duration-300 relative">
+                    REGISTER (ලියාපදිංචි වන්න)
+                </button>
+            </div>
+
+            <!-- LOGIN VIEW -->
+            <div id="loginFormContainer" class="fade-transition opacity-100 transform translate-x-0">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-white tracking-tight">Welcome Back!</h2>
+                    <p class="text-xs text-slate-400 mt-1">නැවතත් සාදරයෙන් පිළිගනිමු! ඇතුළු වීමට ඔබගේ ගිණුම් තොරතුරු සපයන්න.</p>
+                </div>
+
+                <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Email or Username • විද්‍යුත් තැපෑල</label>
+                        <input 
+                            type="text" 
+                            id="loginEmail" 
+                            required 
+                            placeholder="username@email.com" 
+                            class="w-full glow-input rounded-2xl px-4 py-3.5 text-sm font-medium text-white placeholder-slate-500 outline-none"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider">Password • මුරපදය</label>
+                            <a href="#" class="text-[9px] font-bold text-brand-400 hover:underline">Forgot?</a>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            required 
+                            placeholder="••••••••" 
+                            class="w-full glow-input rounded-2xl px-4 py-3.5 text-sm font-medium text-white placeholder-slate-500 outline-none"
+                        >
+                    </div>
+
+                    <div class="flex items-center gap-2 py-1">
+                        <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-brand-600 focus:ring-brand-500 focus:ring-offset-slate-900">
+                        <label for="rememberMe" class="text-xs text-slate-400 font-semibold cursor-pointer">Remember me • මාව මතක තබා ගන්න</label>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-brand-600/20 active:scale-[0.98] mt-2"
+                    >
+                        Login to Classroom ➔
+                    </button>
+                </form>
+            </div>
+
+            <!-- REGISTER VIEW (Hidden by default) -->
+            <div id="registerFormContainer" class="fade-transition opacity-0 transform translate-x-10 hidden">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-white tracking-tight">Join Virtual Classroom</h2>
+                    <p class="text-xs text-slate-400 mt-1">නව ගිණුමක් සාදා නැණසල සමඟ එකතු වන්න.</p>
+                </div>
+
+                <form onsubmit="handleRegisterSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Student Name • ශිෂ්‍යයාගේ නම</label>
+                        <input 
+                            type="text" 
+                            id="registerName" 
+                            required 
+                            placeholder="Chami Bandara" 
+                            class="w-full glow-input rounded-2xl px-4 py-3.5 text-sm font-medium text-white placeholder-slate-500 outline-none"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Email Address • විද්‍යුත් තැපෑල</label>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            required 
+                            placeholder="yourname@email.com" 
+                            class="w-full glow-input rounded-2xl px-4 py-3.5 text-sm font-medium text-white placeholder-slate-500 outline-none"
+                        >
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Password • මුරපදය</label>
+                            <input 
+                                type="password" 
+                                id="registerPassword" 
+                                required 
+                                placeholder="••••••••" 
+                                class="w-full glow-input rounded-2xl px-4 py-3.5 text-sm font-medium text-white placeholder-slate-500 outline-none"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">School Term • වාරය</label>
+                            <div class="relative">
+                                <select 
+                                    id="registerTerm" 
+                                    class="w-full appearance-none glow-input rounded-2xl px-4 py-3.5 text-sm font-bold text-slate-300 outline-none cursor-pointer"
+                                >
+                                    <option value="1st Term">1st Term (පළමු වාරය)</option>
+                                    <option value="2nd Term">2nd Term (දෙවන වාරය)</option>
+                                    <option value="3rd Term">3rd Term (තෙවන වාරය)</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400 text-xs">
+                                    ▼
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 py-1">
+                        <input type="checkbox" id="terms" required class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-brand-600 focus:ring-brand-500 focus:ring-offset-slate-900">
+                        <label for="terms" class="text-[11px] text-slate-400 font-semibold cursor-pointer">I agree to instructions & terms of Virtual Teacher</label>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98] mt-2"
+                    >
+                        Create My Account ➔
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Footer / Back to main classroom Link -->
+        <div class="text-center mt-6">
+            <a href="/" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-all">
+                ← Back to Classroom Home
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Active Toast Alert System -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-950 text-white border border-white/10 px-6 py-4 rounded-3xl text-xs font-bold shadow-2xl z-[100] transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-none flex items-center gap-3">
+        <span id="toastIcon" class="text-base">✨</span>
+        <span id="toastMsg">සාර්ථකව සිදු කරන ලදී!</span>
+    </div>
+
+    <!-- Active JavaScript Controller Logic -->
+    <script>
+        // Switch between login and register tab
+        function switchTab(tab) {
+            const activeIndicator = document.getElementById('activeIndicator');
+            const loginTabBtn = document.getElementById('loginTabBtn');
+            const registerTabBtn = document.getElementById('registerTabBtn');
+            const loginForm = document.getElementById('loginFormContainer');
+            const registerForm = document.getElementById('registerFormContainer');
+
+            if (tab === 'login') {
+                // Adjust switch indicator
+                activeIndicator.style.transform = 'translateX(0)';
+                loginTabBtn.className = "flex-1 py-2.5 text-xs font-black text-white text-center rounded-xl z-10 transition-all duration-300 relative";
+                registerTabBtn.className = "flex-1 py-2.5 text-xs font-black text-slate-400 text-center rounded-xl z-10 transition-all duration-300 relative";
+
+                // Fade register form out, login form in
+                registerForm.classList.add('opacity-0', 'translate-x-10');
+                setTimeout(() => {
+                    registerForm.classList.add('hidden');
+                    loginForm.classList.remove('hidden');
+                    setTimeout(() => {
+                        loginForm.classList.remove('opacity-0', '-translate-x-10');
+                    }, 50);
+                }, 300);
+            } else {
+                // Adjust switch indicator
+                activeIndicator.style.transform = 'translateX(100%)';
+                loginTabBtn.className = "flex-1 py-2.5 text-xs font-black text-slate-400 text-center rounded-xl z-10 transition-all duration-300 relative";
+                registerTabBtn.className = "flex-1 py-2.5 text-xs font-black text-white text-center rounded-xl z-10 transition-all duration-300 relative";
+
+                // Fade login form out, register form in
+                loginForm.classList.add('opacity-0', '-translate-x-10');
+                setTimeout(() => {
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.remove('hidden');
+                    setTimeout(() => {
+                        registerForm.classList.remove('opacity-0', 'translate-x-10');
+                    }, 50);
+                }, 300);
+            }
+        }
+
+        // Trigger custom modern toast alert
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastIcon.innerText = icon;
+            toastMsg.innerText = msg;
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 4000);
+        }
+
+        // Handle Login Submission
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            // Simple interactive feedback & storage setup
+            localStorage.setItem('np_user_email', email);
+            localStorage.setItem('np_user_name', email.split('@')[0]);
+            
+            showToast('ඇතුල් වීම සාර්ථකයි! (Login successful!) Redirecting...', '✅');
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        }
+
+        // Handle Register Submission
+        function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const term = document.getElementById('registerTerm').value;
+
+            // Store details
+            localStorage.setItem('np_user_email', email);
+            localStorage.setItem('np_user_name', name);
+            localStorage.setItem('np_user_term', term);
+            
+            showToast('ගිණුම සාර්ථකව සාදන ලදී! (Account created!) Enjoy learning...', '🎉');
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
